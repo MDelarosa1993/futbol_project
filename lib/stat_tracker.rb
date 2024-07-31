@@ -34,6 +34,17 @@ class StatTracker
       home_goals + away_goals
     end
   end
-  
+
+  def percentage_home_wins
+    home_wins = @games.count {|game|[:home_team_won]}
+  end
+
+  def percentage_home_wins
+    visitor_wins = @games.count {|game|[:visitor_wins]}
+  end
+
+  def percentage_ties
+    percentage_ties = @game.count {|game|[:games_ties]}
+  end
     
 end
