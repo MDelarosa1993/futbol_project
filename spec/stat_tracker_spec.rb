@@ -1,5 +1,4 @@
-require 'csv'
-require './lib/stat_tracker'
+require 'spec_helper'
 
 RSpec.describe StatTracker do 
   before(:all) do 

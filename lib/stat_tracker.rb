@@ -1,4 +1,7 @@
-require 'spec_helper'
+require 'csv'
+require_relative 'games'
+require_relative 'teams'
+require_relative 'game_teams'
 
 class StatTracker 
   def self.from_csv(locations)
