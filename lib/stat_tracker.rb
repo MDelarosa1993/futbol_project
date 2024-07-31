@@ -36,15 +36,15 @@ class StatTracker
   end
 
   def percentage_home_wins
-    home_wins = @games.count {|game|[:home_team_won]}
+    home_wins = @games.count {|game| game[:result]}
   end
 
   def percentage_visitor_wins
-    visitor_wins = @games.count {|game|[:visitor_wins]}
+    visitor_wins = @games.count {|game| game[:HoA]}
   end
 
   def percentage_ties
-    percentage_ties = @game.count {|game|[:games_ties]}
+    percentage_ties = @game.count {|game| game[:result]}
   end
     
 end
