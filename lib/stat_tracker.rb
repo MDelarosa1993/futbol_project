@@ -35,5 +35,24 @@ class StatTracker
     end
   end
   
-    
+  def average_goals_per_game
+    total_goals = @games.sum do |row|
+      row.home_goals + row.away_goals
+    end
+    total_games = @games.count
+    (total_goals / total_games.to_f).round(2)
+  end
+
+  def average_goals_by_season
+    games_by_season = @games.each_with_object(Hash.new { |hash, key| hash[key] = { total_goals: 0, count: 0 } }) do |row, hash|
+      season = row[:season]
+      hash[season][:total_goals] += row[:home_goals].to_i + row[:away_goals].to_i
+      hash[season][:count] += 1
+    end
+
+    games_by_season.each_with_object({}) do |(season, data), result|
+      result[season] = (data[:total_goals] / data[:count].to_f).round(2)
+    end
+  end
+ 
 end
