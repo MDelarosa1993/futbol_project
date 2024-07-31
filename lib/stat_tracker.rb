@@ -10,7 +10,7 @@ class StatTracker
   def initialize(locations)
     @games = create_objects(locations[:games], Games, self)
     @teams = create_objects(locations[:teams], Teams, self)
-    @game_teams = create_objects(locations[:game_teams], GameTeams, self)
+    # @game_teams = create_objects(locations[:game_teams], GameTeams, self)
 
   end
 
@@ -45,8 +45,8 @@ class StatTracker
 
   def average_goals_by_season
     games_by_season = @games.each_with_object(Hash.new { |hash, key| hash[key] = { total_goals: 0, count: 0 } }) do |row, hash|
-      season = row[:season]
-      hash[season][:total_goals] += row[:home_goals].to_i + row[:away_goals].to_i
+      season = row.season
+      hash[season][:total_goals] += row.home_goals + row.away_goals
       hash[season][:count] += 1
     end
 
