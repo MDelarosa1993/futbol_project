@@ -46,13 +46,6 @@ def count_of_games_by_season
   @games.count_of_games_by_season
 end
 
-def count_of_games_by_season
-  count_games_by_season_list = {}
-  @games.each do |game|
-    count_games_by_season_list[game.season] = 0
-  end
-  @games.each do |game|
-    count_games_by_season_list[game.season] += 1
-  end
-  return count_games_by_season_list
+def count_of_teams
+  @teams.count_of_teams
 end
