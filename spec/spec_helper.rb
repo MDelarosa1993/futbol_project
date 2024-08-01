@@ -1,3 +1,5 @@
+require 'simplecov'
+SimpleCov.start
 require 'csv'
 require './lib/game'
 require './lib/team'
