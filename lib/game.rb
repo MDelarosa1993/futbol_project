@@ -1,4 +1,4 @@
-class Games 
+class Game
   attr_reader :game_id,
               :season,
               :type,
@@ -8,10 +8,9 @@ class Games
               :away_goals,
               :home_goals,
               :venue,
-              :venue_link,
-              :tracker
+              :venue_link
 
-  def initialize(data, tracker)
+  def initialize(data)
     @game_id = data[:game_id]
     @season = data[:season]
     @type = data[:type]
@@ -22,6 +21,5 @@ class Games
     @home_goals = data[:home_goals].to_i
     @venue = data[:venue]
     @venue_link = data[:venue_link]
-    @tracker = tracker
   end
 end

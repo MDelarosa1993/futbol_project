@@ -1,4 +1,5 @@
 require 'csv'
-require_relative 'games'
-require_relative 'teams'
+require './lib/game'
+require './lib/team'
+require './lib/game_team'
 require './lib/stat_tracker'

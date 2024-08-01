@@ -1,5 +1,4 @@
-require 'csv'
-require './lib/stat_tracker'
+require 'spec_helper'
 
 RSpec.describe StatTracker do 
   before(:all) do 
@@ -35,5 +34,17 @@ RSpec.describe StatTracker do
   it 'calculates total score betwen highest and lowest score' do 
     total_scores = @stat_tracker.total_score
     expect(@stat_tracker.total_score).to eq(total_scores)
+  end
+
+  it "#percentage_home_wins" do
+    expect(@stat_tracker.percentage_home_wins).to eq 0.44
+  end
+
+  it 'calculates percentage of visitor wins' do
+    expect(@stat_tracker.percentage_visitor_wins).to eq 0.36
+  end
+
+  it "#percentage_ties" do
+    expect(@stat_tracker.percentage_ties).to eq 0.20
   end
 end 
