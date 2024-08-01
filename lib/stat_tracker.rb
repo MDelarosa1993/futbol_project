@@ -78,7 +78,7 @@ class StatTracker
     ties = @games.count do |game| 
       game.away_goals == game.home_goals
     end
-    percentage = (ties.to_f / total_games) * 100
+    percentage = (ties.to_f / total_games)
     percentage.round(2)
   end
 end
