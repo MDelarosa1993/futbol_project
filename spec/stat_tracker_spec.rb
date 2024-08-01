@@ -22,17 +22,29 @@ RSpec.describe StatTracker do
   end
 
   describe 'highest total score and lowest total' do 
-    xit 'returns highest score' do 
+    it 'returns highest score' do 
       expect(@stat_tracker.highest_total_score).to eq(11)
     end
   end
 
-  xit 'returns lowest score' do 
+  it 'returns lowest score' do 
     expect(@stat_tracker.lowest_total_score).to eq(0)
   end
 
-  xit 'calculates total score betwen highest and lowest score' do 
+  it 'calculates total score betwen highest and lowest score' do 
     total_scores = @stat_tracker.total_score
     expect(@stat_tracker.total_score).to eq(total_scores)
+  end
+
+  it "#percentage_home_wins" do
+    expect(@stat_tracker.percentage_home_wins).to eq 0.44
+  end
+
+  it 'calculates percentage of visitor wins' do
+    expect(@stat_tracker.percentage_visitor_wins).to eq 0.36
+  end
+
+  it "#percentage_ties" do
+    expect(@stat_tracker.percentage_ties).to eq 0.20
   end
 end 
