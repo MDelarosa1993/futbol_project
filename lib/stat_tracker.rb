@@ -54,4 +54,31 @@ class StatTracker
     end
     count
   end
+
+  def percentage_home_wins
+    total_games = @games.size
+    home_wins = @games.count do |game| 
+      game.home_goals > game.away_goals
+    end
+    percentage = (home_wins.to_f / total_games)
+    percentage.round(2)
+  end
+
+  def percentage_visitor_wins
+    total_games = @games.size
+    visitor_wins = @games.count do |game| 
+      game.away_goals > game.home_goals
+    end
+    percentage = (visitor_wins.to_f / total_games)
+    percentage.round(2)
+  end
+
+  def percentage_ties
+    total_games = @games.size
+    ties = @games.count do |game| 
+      game.away_goals == game.home_goals
+    end
+    percentage = (ties.to_f / total_games)
+    percentage.round(2)
+  end
 end
