@@ -3,7 +3,7 @@ class GameTeam
     attr_reader :game_id,
                 :team_id,
                 :hoa,
-                :results,
+                :result,
                 :settled_in,
                 :head_coach,
                 :goals,
@@ -20,17 +20,17 @@ class GameTeam
         @game_id = data[:game_id]
         @team_id = data[:team_id]
         @hoa = data[:hoa]
-        @results = data[:results]
+        @result = data[:result]
         @settled_in = data[:settled_in]
         @head_coach = data[:head_coach]
-        @goals = data[:goals]
-        @shots = data[:shots]
-        @tackles = data[:tackles]
-        @pim = data[:pim]
-        @power_play_opportunities = data[:powerPlayOpportunities]
-        @power_play_goals = data[:powerPlayGoals]
-        @face_off_win_percentage = data[:faceOffWinPercentage]
-        @giveaways = data[:giveaways]
-        @takeaways = data[:takeaways]
+        @goals = data[:goals].to_i
+        @shots = data[:shots].to_i
+        @tackles = data[:tackles].to_i
+        @pim = data[:pim].to_i
+        @power_play_opportunities = data[:powerplayopportunities].to_i
+        @power_play_goals = data[:powerplaygoals].to_i
+        @face_off_win_percentage = data[:faceoffwinpercentage].to_f
+        @giveaways = data[:giveaways].to_i
+        @takeaways = data[:takeaways].to_i
     end
 end

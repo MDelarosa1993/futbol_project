@@ -2,9 +2,15 @@ require 'spec_helper'
 
 RSpec.describe Team do
     before(:each) do
-        @team_path = './data/teams.csv'
-        @stat_tracker = StatTracker.from_csv(@team_path)
-        @team = Team.new(@teams_path, @stat_tracker)
+        @data = {
+            team_id:"1",
+            franchiseid:"23",
+            teamname:"Atlanta United",
+            abbreviation:"ATL",
+            stadium:"Mercedes-Benz Stadium",
+            link:"/api/v1/teams/1"
+        }
+        @team = Team.new(@data)
     end
 
     describe '#initialize' do
@@ -13,10 +19,10 @@ RSpec.describe Team do
         end
 
         it 'has a team_id, franchise_id, team_name, and abbreviation' do
-            expect(@team.team_id).to eq(1)
-            expect(@team.franchise_id).to eq(23)
+            expect(@team.team_id).to eq("1")
+            expect(@team.franchise_id).to eq("23")
             expect(@team.team_name).to eq("Atlanta United")
-            expect(@team.abbreviation).to eq("ALT")
+            expect(@team.abbreviation).to eq("ATL")
         end
 
         it 'has a stadium and a link' do
