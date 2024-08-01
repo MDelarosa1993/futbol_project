@@ -82,4 +82,3 @@ class StatTracker
     percentage.round(2)
   end
 end
-#require "pry" ;binding.pry
