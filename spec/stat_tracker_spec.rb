@@ -47,4 +47,6 @@ RSpec.describe StatTracker do
   it "#percentage_ties" do
     expect(@stat_tracker.percentage_ties).to eq 0.20
   end
+
+  
 end 
