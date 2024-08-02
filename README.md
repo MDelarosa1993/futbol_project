@@ -26,7 +26,6 @@ Starter repository for the [Turing School](https://turing.io/) Futbol project.
 * Thus the group decided to utilizing the Jira board and update it daily as we progress though the project.
 * For our retro we referred to the recommended list provided by Turing and decided to use 'Easy Retro.' There were a number of different formats but for the sake of fun we selected the starwars theme which includes the categories; light side, dark side, padawans(things to learn), and actions to reach the force. 
 
-
 ### Describe your approach to the code design.
 
 * Grouping methods together by similar function. One person will tackle each group of similar methods. If they need help they will reach out to team members to complete these methods. 
