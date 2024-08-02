@@ -63,4 +63,10 @@ RSpec.describe StatTracker do
     }
     expect(@stat_tracker.average_goals_by_season).to eq expected
   end
+
+  describe 'highest_scoring_teams' do
+    it 'returns name of highest scoring visitor team' do 
+      expect(@stat_tracker.highest_scoreing_visitor).to eq()
+    end
+  end
 end 
