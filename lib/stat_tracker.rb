@@ -55,6 +55,10 @@ class StatTracker
     count
   end
 
+  def count_of_teams
+    @teams.count
+  end
+
   def percentage_home_wins
     total_games = @games.size
     home_wins = @games.count do |game| 
@@ -80,5 +84,37 @@ class StatTracker
     end
     percentage = (ties.to_f / total_games)
     percentage.round(2)
+  end
+
+  def average_goals_per_game
+    total_goals = 0
+    total_games = 0
+    @games.each do |game|
+      total_goals += game.away_goals + game.home_goals
+      total_games += 1
+    end
+
+    if total_games > 0
+      average_goals = total_goals.to_f / total_games
+    else
+      average_goals = 0.0
+    end
+    average_goals_rounded = average_goals.round(2)
+    average_goals_rounded
+  end
+  
+
+   def average_goals_by_season
+    games_by_season = @games.group_by { |game| game.season }
+
+    averages = games_by_season.each_with_object({}) do |(season, games), hash|
+      total_goals = games.sum { |game| game.away_goals + game.home_goals }
+      total_games = games.size
+      average = (total_goals.to_f / total_games)
+      hash[season] = average.round(2)
+    end
+    # averages = a hash that contains the avg goals
+    # per game for each seaosn
+    averages
   end
 end

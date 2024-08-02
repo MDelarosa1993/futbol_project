@@ -41,6 +41,7 @@ Starter repository for the [Turing School](https://turing.io/) Futbol project.
 
 ## Contributors
 
+
 [Joel's GitHub](https://github.com/jdavalos98)
 
 [Melchor's GitHub](https://github.com/MDelarosa1993)
