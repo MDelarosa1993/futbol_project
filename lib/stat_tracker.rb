@@ -196,4 +196,11 @@ class StatTracker
   team_names[fewest_tackles_team_id] # is a variable that holds a team ID, which is used as the key to look up in the team_names hash.
   # team_names is a hash where keys are team IDs and values are team names, constructed like this
   end
+
+  def winningest_coach
+    winningest_coach.
+
+
+    
+
 end
