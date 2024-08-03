@@ -66,6 +66,7 @@ RSpec.describe StatTracker do
 
   describe '#most_accurate_team' do
     it 'is the team name with the best ratio of shots to goals for the season' do
+      expect(@stat_tracker.find_game_teams_by_season("2012")).to be_a(Array)
       expect(@stat_tracker.most_accurate_team("20122013")).to eq("FC Cincinnati")
     end
   end
