@@ -66,23 +66,13 @@ RSpec.describe StatTracker do
 
   describe '#most_accurate_team' do
     it 'is the team name with the best ratio of shots to goals for the season' do
-      # @teams to get the teams name
-      # use the id number to get the teams goals, shots, and name in @game_teams
-      # use the goals and shots to find the ratio for each season
-      # seasons are found in the @games
-      # compair that with all the other teams ratios to find the BEST one
-      expect(@stat_tracker.most_accurate_team("20122013")).to eq("Team Name")
+      expect(@stat_tracker.most_accurate_team("20122013")).to eq("FC Cincinnati")
     end
   end
 
   describe '#least_accurate_team' do
     it 'is the team name with the worst ratio of shots to goals by season' do
-      # @teams to get the teams name and id number
-      # use the id number to get the teams goals and shots in @game_teams
-      # use the goals and shots to find the ratio for each season
-      # seasons are found in the @games
-      # compair that with all the other teams ratios to find the WORST one
-      expect(@stat_tracker.least_accurate_team("20122013")).to eq("Team Name")
+      expect(@stat_tracker.least_accurate_team("20122013")).to eq("Portland Thorns FC")
     end
   end
 end
