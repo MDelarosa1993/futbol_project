@@ -66,7 +66,7 @@ RSpec.describe StatTracker do
 
   describe 'highest_scoring_teams' do
     it 'returns name of highest scoring visitor team' do 
-      expect(@stat_tracker.highest_scoreing_visitor).to eq()
+      expect(@stat_tracker.highest_scoring_visitor).to eq('team name')
     end
   end
 end 

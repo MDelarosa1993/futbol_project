@@ -113,4 +113,20 @@ class StatTracker
     # per game for each seaosn
     averages
   end
+
+  def highest_scoring_visitor
+    visitor_score = Hash.new(0)
+
+    @game_teams.each do |game_team|
+      if game_team.hoa == 'away'
+        visitor_scores[game_team.team_id] += game_team.goals
+      end
+    end
+
+    highest_scoring_team_id = 
+    visitor_scores.max_by { |team_id, goals| goals}[0]
+
+    @teams.find { |team| team.team_id ==
+  highest_scoring_team_id }.team_name
+  end
 end
