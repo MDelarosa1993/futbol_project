@@ -153,7 +153,7 @@ class StatTracker
     end
     games_in_season = find_game_teams_by_season(seasons)
     games_by_team_id = games_in_season.group_by { |gt| gt.team_id }
-    team_ratios = games_by_team_id.map do |team_id, games| 
+    team_ratios = games_by_team_id.map do |team_id, games|
       [@teams.find {|team| team.team_id == team_id}, find_ratio(games)]
     end
     team_ratios
