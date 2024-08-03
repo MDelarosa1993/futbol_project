@@ -200,4 +200,30 @@ class StatTracker
   team_names[fewest_tackles_team_id] # is a variable that holds a team ID, which is used as the key to look up in the team_names hash.
   # team_names is a hash where keys are team IDs and values are team names, constructed like this
   end
+
+  def team_name_ids
+    team_name_by_id = {}
+    @teams.each do |team_id, team|
+      team_name_by_id[team.team_name] = team_id
+    end
+    team_name_by_id
+  end
+
+  def best_offense
+    game_team_goals = Hash.new { |hash, key| hash[key] = [] }
+  
+    @game_teams.each do |game_team|
+      game_team_goals[game_team.team_id.to_sym] << game_team.goals.to_i
+    end
+  
+    average_goals = game_team_goals.transform_values do |goals|
+      goals.sum.to_f / goals.size
+    end
+  
+    best_team_id = average_goals.max_by { |_, avg_goals| avg_goals }.first
+  
+    best_team = @teams.find { |team| team.team_id == best_team_id.to_s }
+    
+    best_team.team_name
+  end
 end
