@@ -113,4 +113,47 @@ class StatTracker
     # per game for each seaosn
     averages
   end
+
+  def most_tackles(season) 
+    filtered_games = @games.select do |game|
+      # Check if the season of the current game matches the provided season
+      game.season == season
+    end
+    # Extract the game_ids from the filtered games
+    game_ids = filtered_games.map do |game|
+      # Get the game_id of the current game
+      game.game_id
+    end
+    # Filter the game_teams to only include those related to the game IDs found above
+    # Select game_teams where the game_id is in the list of game IDs from the specified season
+    game_teams_in_season = @game_teams.find_all do |game_team|
+      game_ids.include?(game_team.game_id)
+    end
+
+    # Add the total number of tackles for each team
+    # Group the filtered game_teams by team_id
+    # For each group of game_teams belonging to the same team_id, sum up the tackles
+    tackles_by_team = game_teams_in_season
+      .group_by(&:team_id)
+      .transform_values do |game_teams|
+        game_teams.sum(&:tackles)
+      end
+
+    # Determine the team with the most tackles
+    # Find the team_id with the highest sum of tackles
+    team_id_with_most_tackles = tackles_by_team.max_by do |team_id, tackles|
+      tackles
+    end.first
+
+    # Get the name of the team with the most tackles
+    # Find the team object using the team_id obtained above
+    team = @teams.find do |team|
+      team.team_id == team_id_with_most_tackles
+    end
+
+    # return the team name
+    team.team_name 
+  end
+
+  
 end

@@ -63,4 +63,9 @@ RSpec.describe StatTracker do
     }
     expect(@stat_tracker.average_goals_by_season).to eq expected
   end
+
+  it "#most_tackles" do
+    expect(@stat_tracker.most_tackles("20132014")).to eq "FC Cincinnati"
+    expect(@stat_tracker.most_tackles("20142015")).to eq "Seattle Sounders FC"
+  end
 end 
