@@ -100,9 +100,9 @@ class StatTracker
   end
   
 
-   def average_goals_by_season
+  def average_goals_by_season
     games_by_season = @games.group_by { |game| game.season }
-
+    
     averages = games_by_season.each_with_object({}) do |(season, games), hash|
       total_goals = games.sum { |game| game.away_goals + game.home_goals }
       total_games = games.size
@@ -113,4 +113,81 @@ class StatTracker
     # per game for each seaosn
     averages
   end
+
+  def most_accurate_team(season)
+    team_ratios(season)
+    require 'pry'; binding.pry
+    # sort through the list of ratios to find the BEST one
+    # then use the id number to find the corresponding team name
+  end
+
+  # def least_accurate_team(season)
+  #   team_ratios(season)
+  #    # sort through the list of ratios to find the WORST one
+  #   # then use the id number to find the corresponding team name
+  # end
+
+  def team_ratios(season)
+    
+    hash = {}
+    seasons = @games.each do |game|
+      hash[game.season] = {}
+    end
+    
+    @game_teams.each do |game_team|
+      if season[0, 4] == game_team.game_id[0, 4]
+        ratio = if game_team.goals != 0
+          game_team.shots / game_team.goals
+        else
+          0
+        end
+        team_name = nil
+        @teams.find do |team|
+          if game_team.team_id == team.team_id
+            team_name = team.team_name
+          end
+        end
+        hash[season][team_name] = ratio
+      end
+    end
+    hash
+  end
+  
+  # def team_ratios(season)
+  #   games_by_season = @games.group_by { |game| game.season }
+
+  #   team_id_with_ratio = {}
+
+  #   # get the game_id, shots/goals ratio, and team_id number
+    # @game_teams.group_by do |game|
+    #   ratio = if game.goals != 0
+    #     game.shots / game.goals
+    #   else
+    #     0
+    #   end
+    #   team_id_with_ratio[game.team_id] = {ratio: ratio, game_id: game.game_id}
+    # end
+    
+  #   # we now have game objects sorted by season,
+  #   # and a hash with the team_id, their ratio, and the game number
+  #   # now sort the ratios by season
+  #   season_ratios = {}
+
+  #   games_by_season[season].each do |game|
+  #     team_id_with_ratio.each do |team, info|
+  #       # require 'pry'; binding.pry
+  #       info.each do |x|
+  #         # require 'pry'; binding.pry
+  #         if x[0] == :game_id && x[1] == game.game_id
+  #           season_ratios[team] = info[:ratio]
+  #         end
+  #       end
+  #     end
+  #   end
+  #   require 'pry'; binding.pry
+    
+  #   # we need to go through the team_id_with_ratio hash and match the game number with the season
+  #   # and return the seasons ratios and the team's corresponding id number
+  # end
+
 end

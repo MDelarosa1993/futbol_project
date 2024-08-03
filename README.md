@@ -37,6 +37,7 @@ Starter repository for the [Turing School](https://turing.io/) Futbol project.
 [DTR Link](https://docs.google.com/document/d/1eRyCmQuAlY8jA7yiepLuJlpfgi4hn2COcAz-tQuNMlQ/edit)
 
 #### Create a section in your README called “Contributors”. List each group member’s name and link to their LinkedIn and Github profiles.<br/>
+[Group Retro](https://easyretro.io/publicboard/e6efvUfwGGeGkQhNNmP0zReO0M32/34ca93ea-06a9-443f-a81c-257ee813f13a)
 
 ## Contributors
 
