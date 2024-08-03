@@ -64,6 +64,16 @@ RSpec.describe StatTracker do
     expect(@stat_tracker.average_goals_by_season).to eq expected
   end
 
+  it "#most_tackles" do
+    expect(@stat_tracker.most_tackles("20132014")).to eq "FC Cincinnati"
+    expect(@stat_tracker.most_tackles("20142015")).to eq "Seattle Sounders FC"
+  end
+
+  it "#fewest_tackles" do
+    expect(@stat_tracker.fewest_tackles("20132014")).to eq "Atlanta United"
+    expect(@stat_tracker.fewest_tackles("20142015")).to eq "Orlando City SC"
+  end
+
   it "#count_of_games_by_season" do
   expected = {
     "20122013"=>806,
@@ -79,12 +89,4 @@ end
   it "#count_of_teams" do
     expect(@stat_tracker.count_of_teams).to eq 32
   end
-
-  xit "#best_offense" do
-    expect(@stat_tracker.best_offense).to eq "Reign FC"
-  end
-
-  xit "#worst_offense" do
-    expect(@stat_tracker.worst_offense).to eq "Utah Royals FC"
-  end
-end 
+end
