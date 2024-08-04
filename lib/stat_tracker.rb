@@ -100,9 +100,9 @@ class StatTracker
   end
   
 
-   def average_goals_by_season
+  def average_goals_by_season
     games_by_season = @games.group_by { |game| game.season }
-
+    
     averages = games_by_season.each_with_object({}) do |(season, games), hash|
       total_goals = games.sum { |game| game.away_goals + game.home_goals }
       total_games = games.size
@@ -196,4 +196,51 @@ class StatTracker
   team_names[fewest_tackles_team_id] # is a variable that holds a team ID, which is used as the key to look up in the team_names hash.
   # team_names is a hash where keys are team IDs and values are team names, constructed like this
   end
+
+  def most_accurate_team(season)
+    team_ratios
+    best_team = team_ratios.max_by do |tr|
+      tr[1]
+    end
+    best_team[0].team_name
+  end
+
+  def least_accurate_team(season)
+    team_ratios
+    worst_team = team_ratios.min_by do |tr|
+      tr[1]
+    end
+    worst_team[0].team_name
+  end
+
+  def find_game_teams_by_season(season)
+    @game_teams.find_all do |gt|
+      gt.game_id[0..3] == season
+    end
+  end
+
+  def find_ratio(game_teams)
+    shots = 0.0
+    goals = 0.0
+    game_teams.each do |gt|
+      shots += gt.shots
+      goals += gt.goals
+    end
+    shots / goals
+  end
+
+  def team_ratios
+    seasons = []
+    @games.each do |game|
+        seasons = game.season[0..3]
+    end
+    games_in_season = find_game_teams_by_season(seasons)
+    games_by_team_id = games_in_season.group_by { |gt| gt.team_id }
+    team_ratios = games_by_team_id.map do |team_id, games|
+      [@teams.find {|team| team.team_id == team_id}, find_ratio(games)]
+    end
+    team_ratios
+  end
+
+
 end
