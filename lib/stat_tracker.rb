@@ -8,21 +8,23 @@ class StatTracker
   attr_reader :games, :teams, :game_teams
 
   def self.from_csv(locations)
-    games = []
-    teams = []
-    game_teams = []
-    
-    CSV.foreach(locations[:games], headers: true, header_converters: :symbol) do |row|
-      games << Game.new(row.to_h)
-    end
-    CSV.foreach(locations[:teams], headers: true, header_converters: :symbol) do |row|
-      teams << Team.new(row.to_h)
-    end
-    CSV.foreach(locations[:game_teams], headers: true, header_converters: :symbol) do |row|
-      game_teams << GameTeam.new(row.to_h)
-    end
+    # The from_csv method initializes StatTracker object
+    # with the arrays of Game, Team, and GameTeam objects created from the CSV files. 
+    # The read_and_process_csv method abstracts the common logic of reading and creating objects from a CSV file.
+    games = read_and_process_csv(locations[:games], Game)
+    teams = read_and_process_csv(locations[:teams], Team)
+    game_teams = read_and_process_csv(locations[:game_teams], GameTeam)
 
     new(games, teams, game_teams)
+  end
+    # Reads the CSV file at file_path(games.csv, teams.csv, game_teams)
+    # Converts each row to a hash (row.to_h), 
+    # initializes an object of class klass with this hash, 
+    # and returns an array of these objects.
+  def self.read_and_process_csv(file_path, file_class )
+    CSV.foreach(file_path, headers: true, header_converters: :symbol).map do |row|
+      file_class.new(row.to_h)
+    end
   end
 
   def initialize(games, teams, game_teams)
