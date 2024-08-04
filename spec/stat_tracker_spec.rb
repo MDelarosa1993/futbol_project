@@ -87,4 +87,28 @@ RSpec.describe StatTracker do
       expect(@stat_tracker.least_accurate_team("20122013")).to eq("Portland Thorns FC")
     end
   end
+
+  it "#count_of_teams" do
+    expect(@stat_tracker.count_of_teams).to eq 32
+  end
+
+  it "#best_offense" do
+    expect(@stat_tracker.best_offense).to eq "Reign FC"
+  end
+
+  it "#worst_offense" do
+    expect(@stat_tracker.worst_offense).to eq "Utah Royals FC"
+  end
+
+  it "#count_of_games_by_season" do
+    expected = {
+      "20122013"=>806,
+      "20162017"=>1317,
+      "20142015"=>1319,
+      "20152016"=>1321,
+      "20132014"=>1323,
+      "20172018"=>1355
+    }
+  expect(@stat_tracker.count_of_games_by_season).to eq expected
+  end
 end
