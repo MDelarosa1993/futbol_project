@@ -246,5 +246,40 @@ class StatTracker
     team_ratios
   end
 
-
+  # Method to calculate average goals per team
+  # This helper method computes the average number of goals for each team by iterating 
+  # through @game_teams, grouping goals by team ID, and then calculating the average. 
+  # Both best_offense and worst_offense use this method to get the average goals data.
+  def calculate_average_goals
+    game_team_goals = Hash.new { |hash, key| hash[key] = [] }
+    @game_teams.each do |game_team|
+      game_team_goals[game_team.team_id.to_sym] << game_team.goals.to_i
+    end
+    game_team_goals.transform_values do |goals|
+      goals.sum.to_f / goals.size
+    end
+  end
+  
+  # Method to find a team's name by team ID
+#  This method searches through the @teams array to find the matching team and returns the team name. 
+  def find_team_name_by_id(team_id)
+    team = @teams.find { |t| t.team_id == team_id.to_s }
+    team.team_name if team
+  end
+  
+  # They use calculate_average_goals to get the average goals per team and find_team_name_by_id to retrieve the 
+  # team name based on the ID.
+  # Best offense method
+  def best_offense
+    average_goals = calculate_average_goals
+    best_team_id = average_goals.max_by { |_, avg_goals| avg_goals }.first
+    find_team_name_by_id(best_team_id)
+  end
+  
+  # Worst offense method
+  def worst_offense
+    average_goals = calculate_average_goals
+    worst_team_id = average_goals.min_by { |_, avg_goals| avg_goals }.first
+    find_team_name_by_id(worst_team_id)
+  end
 end
