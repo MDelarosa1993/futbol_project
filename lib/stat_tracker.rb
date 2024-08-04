@@ -8,22 +8,28 @@ class StatTracker
   attr_reader :games, :teams, :game_teams
 
   def self.from_csv(locations)
-    games = []
-    teams = []
-    game_teams = []
-    
-    CSV.foreach(locations[:games], headers: true, header_converters: :symbol) do |row|
-      games << Game.new(row.to_h)
-    end
-    CSV.foreach(locations[:teams], headers: true, header_converters: :symbol) do |row|
-      teams << Team.new(row.to_h)
-    end
-    CSV.foreach(locations[:game_teams], headers: true, header_converters: :symbol) do |row|
-      game_teams << GameTeam.new(row.to_h)
-    end
+    # The from_csv method initializes StatTracker object
+    # with the arrays of Game, Team, and GameTeam objects created from the CSV files. 
+    # The read_and_process_csv method abstracts the common logic of reading and creating objects from a CSV file.
+    # Calls read_and_process_csv for each type of CSV file 
+    # (games, teams, game_teams), passing the appropriate class (Game, Team, GameTeam) to construct the objects.
+    games = read_and_process_csv(locations[:games], Game)
+    teams = read_and_process_csv(locations[:teams], Team)
+    game_teams = read_and_process_csv(locations[:game_teams], GameTeam)
 
     new(games, teams, game_teams)
   end
+    # Reads the CSV file at file_path(games.csv, teams.csv, game_teams)
+    # Converts each row to a hash (row.to_h), 
+    # initializes an object of class klass with this hash, 
+    # and returns an array of these objects.
+  def self.read_and_process_csv(file_path, file_class )
+    CSV.foreach(file_path, headers: true, header_converters: :symbol).map do |row|
+      file_class.new(row.to_h)
+    end
+  end
+  # self is being used here to seperate the class methods from an instance method.
+  #
 
   def initialize(games, teams, game_teams)
     @games = games
@@ -118,87 +124,69 @@ class StatTracker
     averages
   end
 
-  def most_tackles(season) 
-    # This iteration will filter out the games that dont belong to the season
-    # the filtered_games variable will contain only the games that are from the given season
-    filtered_games = @games.select do |game|
-      game.season == season
-    end
-    # We are extracting game_ids values from the filtered_games array
-    # game_ids will be an array containing game_ids values from the games filtered before
-    game_ids = filtered_games.map do |game|
-      game.game_id
-    end
-    # this is filtering through game_teams array to include only game_teams objects whose
-    # game_id is in the game_ids array, retrieves all gameteams for games for that season
-    # gameteamsinseason will be an array of game_team objects 
-    game_teams_in_season = @game_teams.find_all do |game_team|
-      game_ids.include?(game_team.game_id)
-    end
-
-    
-    tackles_by_team = game_teams_in_season # this is an array of gameteam objects for specif seasons
-      .group_by(&:team_id) # this is game_team.team_id for each game object, game_team is grouped by team_id
-      .transform_values do |game_teams| # This method takes a block and transforms the values of a hash, leaving the keys unchanged.
-        # this block processes each value of the hash (which is an array of game_team objects).
-        game_teams.sum(&:tackles) # This calculates the sum of the tackles attribute for all game_team objects in the game_teams array. 
-        #The &:tackles is a shorthand for game_team.tackles, which sums up the tackles values.
-      end
-
-    # This is a hash where the keys are team_ids and the values are the total number of tackles for each team.
-    team_id_with_most_tackles = tackles_by_team.max_by do |team_id, tackles| 
-      tackles
-      # do |team_id, tackles| tackles end: This block specifies that the maximum value should be determined by the tackles value. 
-      # max_by will look at the number of tackles and return the team_id with the highest number of tackles.
-    end.first # his method extracts the first element from the result of max_by, which is the team_id with the most tackles.
-
-    
-    team = @teams.find do |team|
-      team.team_id == team_id_with_most_tackles
-    end # The result will be the Team object that has the team_id matching 
-
-    # return the team name, # return the name of the team after finding the specific Team object based on above 
-    team.team_name 
+  def filter_games_by_season(season)
+    @games.find_all { |game| game.season == season }
   end
-
-  def fewest_tackles(season)
-    game_ids_in_season = @games
-    .select { |game| game.season == season } 
-     # select iterates over each game in the @games array and checks if the season of the game matches the season argument 
-     #It returns a new array with only those games that meet the condition.
-    .map { |game| game.game_id }
-    # map iterates over the filtered games and extracts the game_id from each game object. 
-    # It returns a new array containing just the game_ids.
-    .uniq  
-    # uniq iterates through the array and returns a new array with all duplicate game_ids removed, 
-    # ensuring each game_id appears only once.                   
-
-  # 
-  tackles_by_team = @game_teams
-    .select { |game_team| game_ids_in_season.include?(game_team.game_id) } 
-     # select iterates over each game_team in @game_teams, 
-     #checking if its game_id is present in the game_ids_in_season array. 
-     # It returns a new array containing only the game_team objects that match the condition.
-    .group_by(&:team_id)   
-     # group_by creates a hash where the keys are team_id values and the values are arrays of game_team objects that have the same team_id. 
-     # it organizes all game_team records by the team they belong to                                              
-    .transform_values { |game_teams| game_teams.sum(&:tackles) } 
-     # transform_values iterates over the hash values (arrays of game_team objects). 
-     # For each array, it calculates the sum of tackles for each game_team using sum(&:tackles). 
-     # This results in a new hash where each key (team_id) maps to the total tackles made by that team.
-
   
-  fewest_tackles_team_id = tackles_by_team.min_by { |_, total_tackles| total_tackles }&.first # & is a safe operator to avoid nil
-    # For each pair, it evaluates the block provided (in this case, { |_, total_tackles| total_tackles }), which means it is looking at the total_tackles value. 
-    # It returns the key-value pair where total_tackles is the smallest.
-    # .first returns the first element of key-value pair. -Team id-
-  team_names = @teams
-    .each_with_object({}) { |team, hash| hash[team.team_id] = team.team_name } # For each team object, 
-    # it adds an entry to the hash with the team_id as the key and team_name as the value. 
-# each_with_object takes an initial object (in this case, 
-# an empty hash {}) and yields each element of the array along with the accumulator (the hash) to the block.
-  team_names[fewest_tackles_team_id] # is a variable that holds a team ID, which is used as the key to look up in the team_names hash.
-  # team_names is a hash where keys are team IDs and values are team names, constructed like this
+  def get_game_ids_by_season(season)
+    filtered_games = filter_games_by_season(season)
+    game_ids = []
+    filtered_games.each do |game|
+      game_id = game.game_id
+      game_ids << game_id
+    end
+    game_ids
+  end
+  
+  def filter_game_teams_by_game_ids(game_ids)
+    @game_teams.find_all { |game_team| game_ids.include?(game_team.game_id) }
+  end
+  
+  def calculate_tackles_by_team(game_teams)
+    tackles_by_team = Hash.new(0)
+    game_teams.each do |game_team|
+      team_id = game_team.team_id
+      tackles = game_team.tackles
+      tackles_by_team[team_id] += tackles
+    end
+    tackles_by_team
+  end
+  
+  def find_team_by_id(team_id)
+    @teams.find { |team| team.team_id == team_id }
+  end
+  
+ 
+  def construct_team_names_hash
+    team_names_hash = {}
+    @teams.each do |team|
+        team_id = team.team_id
+        team_name = team.team_name
+        team_names_hash[team_id] = team_name
+  end
+      team_names_hash  
+end
+  
+  
+  def most_tackles(season)
+    game_ids = get_game_ids_by_season(season)
+    game_teams_in_season = filter_game_teams_by_game_ids(game_ids)
+    tackles_by_team = calculate_tackles_by_team(game_teams_in_season)
+    
+    team_id_with_most_tackles = tackles_by_team.max_by { |_, tackles| tackles }&.first
+    team = find_team_by_id(team_id_with_most_tackles)
+    
+    team.team_name
+  end
+  
+  def fewest_tackles(season)
+    game_ids_in_season = get_game_ids_by_season(season).uniq
+    tackles_by_team = calculate_tackles_by_team(filter_game_teams_by_game_ids(game_ids_in_season))
+    
+    fewest_tackles_team_id = tackles_by_team.min_by { |_, total_tackles| total_tackles }&.first
+    team_names = construct_team_names_hash
+    
+    team_names[fewest_tackles_team_id]
   end
 
   def most_accurate_team(season)

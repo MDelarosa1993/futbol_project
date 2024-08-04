@@ -114,4 +114,29 @@ RSpec.describe StatTracker do
     }
   expect(@stat_tracker.count_of_games_by_season).to eq expected
   end
+
+  it 'returns games by season' do 
+    games_by_season = @stat_tracker.filter_games_by_season("20132014")
+    expect(@stat_tracker.filter_games_by_season(("20132014"))).to eq(games_by_season)
+  end
+
+  it 'returns games by season' do 
+    game_id_by_season = @stat_tracker.get_game_ids_by_season("20132014")
+    expect(@stat_tracker.get_game_ids_by_season(("20132014"))).to eq(game_id_by_season)
+  end
+
+  it 'returns gameteams by game id' do 
+    game_team_id = @stat_tracker.filter_game_teams_by_game_ids("6")
+    expect(@stat_tracker.filter_game_teams_by_game_ids(("6"))).to eq(game_team_id)
+  end
+
+  it 'returns team by id' do 
+    team_id = @stat_tracker.find_team_by_id('1')
+    expect(@stat_tracker.find_team_by_id('1')).to eq(team_id)
+  end
+
+  it 'retruns a hash with team names' do 
+    hash = @stat_tracker.construct_team_names_hash
+    expect(@stat_tracker.construct_team_names_hash).to eq(hash)
+  end
 end
