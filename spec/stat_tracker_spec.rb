@@ -127,5 +127,13 @@ RSpec.describe StatTracker do
     expect(@stat_tracker.filter_game_teams_by_game_ids(("6"))).to eq(game_team_id)
   end
 
-  
+  it 'returns team by id' do 
+    team_id = @stat_tracker.find_team_by_id('1')
+    expect(@stat_tracker.find_team_by_id('1')).to eq(team_id)
+  end
+
+  it 'retruns a hash with team names' do 
+    hash = @stat_tracker.construct_team_names_hash
+    expect(@stat_tracker.construct_team_names_hash).to eq(hash)
+  end
 end

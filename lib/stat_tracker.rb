@@ -149,7 +149,7 @@ class StatTracker
       tackles = game_team.tackles
       tackles_by_team[team_id] += tackles
     end
-    tackles_by_team  
+    tackles_by_team
   end
   
   def find_team_by_id(team_id)
