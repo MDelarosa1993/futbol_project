@@ -203,7 +203,7 @@ class StatTracker
 
   def most_accurate_team(season)
     team_ratios
-    best_team = team_ratios.max_by do |tr|
+    best_team = team_ratios[season[0..3]].max_by do |tr|
       tr[1]
     end
     best_team[0].team_name
@@ -211,7 +211,7 @@ class StatTracker
 
   def least_accurate_team(season)
     team_ratios
-    worst_team = team_ratios.min_by do |tr|
+    worst_team = team_ratios[season[0..3]].min_by do |tr|
       tr[1]
     end
     worst_team[0].team_name
@@ -230,20 +230,20 @@ class StatTracker
       shots += gt.shots
       goals += gt.goals
     end
-    shots / goals
+    goals / shots
   end
 
   def team_ratios
-    seasons = []
-    @games.each do |game|
-        seasons = game.season[0..3]
+    seasons = @games.map { |game| game.season[0..3] }.uniq
+    team_ratios_list = {}
+    seasons.each do |season|
+      games_in_season = find_game_teams_by_season(season)
+      games_by_team_id = games_in_season.group_by { |gt| gt.team_id }
+      team_ratios_list[season] = games_by_team_id.map do |team_id, games|
+        [@teams.find {|team| team.team_id == team_id}, find_ratio(games)]
+      end
     end
-    games_in_season = find_game_teams_by_season(seasons)
-    games_by_team_id = games_in_season.group_by { |gt| gt.team_id }
-    team_ratios = games_by_team_id.map do |team_id, games|
-      [@teams.find {|team| team.team_id == team_id}, find_ratio(games)]
-    end
-    team_ratios
+    team_ratios_list
   end
 
   # Method to calculate average goals per team
