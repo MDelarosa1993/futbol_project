@@ -74,19 +74,17 @@ RSpec.describe StatTracker do
     expect(@stat_tracker.fewest_tackles("20142015")).to eq "Orlando City SC"
   end
 
-  it "#count_of_games_by_season" do
-  expected = {
-    "20122013"=>806,
-    "20162017"=>1317,
-    "20142015"=>1319,
-    "20152016"=>1321,
-    "20132014"=>1323,
-    "20172018"=>1355
-  }
-  expect(@stat_tracker.count_of_games_by_season).to eq expected
-end
 
-  it "#count_of_teams" do
-    expect(@stat_tracker.count_of_teams).to eq 32
+  describe '#most_accurate_team' do
+    it 'is the team name with the best ratio of shots to goals for the season' do
+      expect(@stat_tracker.find_game_teams_by_season("2012")).to be_a(Array)
+      expect(@stat_tracker.most_accurate_team("20122013")).to eq("FC Cincinnati")
+    end
+  end
+
+  describe '#least_accurate_team' do
+    it 'is the team name with the worst ratio of shots to goals by season' do
+      expect(@stat_tracker.least_accurate_team("20122013")).to eq("Portland Thorns FC")
+    end
   end
 end

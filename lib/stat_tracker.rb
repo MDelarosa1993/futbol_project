@@ -104,9 +104,9 @@ class StatTracker
   end
   
 
-   def average_goals_by_season
+  def average_goals_by_season
     games_by_season = @games.group_by { |game| game.season }
-
+    
     averages = games_by_season.each_with_object({}) do |(season, games), hash|
       total_goals = games.sum { |game| game.away_goals + game.home_goals }
       total_games = games.size
@@ -201,29 +201,50 @@ class StatTracker
   # team_names is a hash where keys are team IDs and values are team names, constructed like this
   end
 
-  def team_name_ids
-    team_name_by_id = {}
-    @teams.each do |team_id, team|
-      team_name_by_id[team.team_name] = team_id
+  def most_accurate_team(season)
+    team_ratios
+    best_team = team_ratios.max_by do |tr|
+      tr[1]
     end
-    team_name_by_id
+    best_team[0].team_name
   end
 
-  def best_offense
-    game_team_goals = Hash.new { |hash, key| hash[key] = [] }
-  
-    @game_teams.each do |game_team|
-      game_team_goals[game_team.team_id.to_sym] << game_team.goals.to_i
+  def least_accurate_team(season)
+    team_ratios
+    worst_team = team_ratios.min_by do |tr|
+      tr[1]
     end
-  
-    average_goals = game_team_goals.transform_values do |goals|
-      goals.sum.to_f / goals.size
-    end
-  
-    best_team_id = average_goals.max_by { |_, avg_goals| avg_goals }.first
-  
-    best_team = @teams.find { |team| team.team_id == best_team_id.to_s }
-    
-    best_team.team_name
+    worst_team[0].team_name
   end
+
+  def find_game_teams_by_season(season)
+    @game_teams.find_all do |gt|
+      gt.game_id[0..3] == season
+    end
+  end
+
+  def find_ratio(game_teams)
+    shots = 0.0
+    goals = 0.0
+    game_teams.each do |gt|
+      shots += gt.shots
+      goals += gt.goals
+    end
+    shots / goals
+  end
+
+  def team_ratios
+    seasons = []
+    @games.each do |game|
+        seasons = game.season[0..3]
+    end
+    games_in_season = find_game_teams_by_season(seasons)
+    games_by_team_id = games_in_season.group_by { |gt| gt.team_id }
+    team_ratios = games_by_team_id.map do |team_id, games|
+      [@teams.find {|team| team.team_id == team_id}, find_ratio(games)]
+    end
+    team_ratios
+  end
+
+
 end
