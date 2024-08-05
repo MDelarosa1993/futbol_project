@@ -139,4 +139,20 @@ RSpec.describe StatTracker do
     hash = @stat_tracker.construct_team_names_hash
     expect(@stat_tracker.construct_team_names_hash).to eq(hash)
   end
+
+  it 'returns the highest scoring visitor' do 
+    expect(@stat_tracker.highest_scoring_visitor_team).to eq("FC Dallas")
+  end
+
+  it 'returns the highest scoring home team' do
+    expect(@stat_tracker.highest_scoring_home_team).to eq("Reign FC")
+  end
+
+  it 'retursn the lowest scoring visitor' do
+    expect(@stat_tracker.lowest_scoring_visitor_team).to eq("San Jose Earthquakes")
+  end
+
+  it 'returns the lowest scoring home team' do 
+    expect(@stat_tracker.lowest_scoring_home_team).to eq("Utah Royals FC")
+  end
 end
