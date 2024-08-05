@@ -297,7 +297,7 @@ class StatTracker
 
   end
 
-  def highest_scoring_visitor_team
+  def highest_scoring_visitor
     highest_scoring_team_by_hoa('away')
   end
 
@@ -305,7 +305,7 @@ class StatTracker
     highest_scoring_team_by_hoa('home')
   end
 
-  def lowest_scoring_visitor_team
+  def lowest_scoring_visitor
     lowest_scoring_team_by_hoa('away')
   end
 

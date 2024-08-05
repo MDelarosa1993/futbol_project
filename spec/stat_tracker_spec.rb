@@ -141,7 +141,7 @@ RSpec.describe StatTracker do
   end
 
   it 'returns the highest scoring visitor' do 
-    expect(@stat_tracker.highest_scoring_visitor_team).to eq("FC Dallas")
+    expect(@stat_tracker.highest_scoring_visitor).to eq("FC Dallas")
   end
 
   it 'returns the highest scoring home team' do
@@ -149,7 +149,7 @@ RSpec.describe StatTracker do
   end
 
   it 'retursn the lowest scoring visitor' do
-    expect(@stat_tracker.lowest_scoring_visitor_team).to eq("San Jose Earthquakes")
+    expect(@stat_tracker.lowest_scoring_visitor).to eq("San Jose Earthquakes")
   end
 
   it 'returns the lowest scoring home team' do 
