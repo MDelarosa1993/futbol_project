@@ -163,9 +163,9 @@ class StatTracker
         team_id = team.team_id
         team_name = team.team_name
         team_names_hash[team_id] = team_name
-  end
+    end
       team_names_hash  
-end
+  end
   
   
   def most_tackles(season)
@@ -269,5 +269,47 @@ end
     average_goals = calculate_average_goals
     worst_team_id = average_goals.min_by { |_, avg_goals| avg_goals }.first
     find_team_name_by_id(worst_team_id)
+  end
+
+  def average_scores_by_hoa(hoa)
+    scores = Hash.new { |hash, key| hash[key] = { goals: 0, games: 0 } }
+
+    @game_teams.each do |game_team|
+    if game_team.hoa == hoa
+      scores[game_team.team_id][:goals] += game_team.goals
+      scores[game_team.team_id][:games] += 1
+    end
+  end
+
+    scores.transform_values { |data| data[:games] > 0 ? data[:goals].to_f / data[:games] : 0.0 }
+  end
+
+  def highest_scoring_team_by_hoa(hoa)
+    average_scores = average_scores_by_hoa(hoa)
+    highest_scoring_team_id = average_scores.max_by { |_, average_goals| average_goals }&.first
+    find_team_by_id(highest_scoring_team_id).team_name
+     
+  end
+  def lowest_scoring_team_by_hoa(hoa)
+    average_scores = average_scores_by_hoa(hoa)
+    lowest_scoring_team_id = average_scores.min_by { |_, average_goals| average_goals }&.first
+    find_team_by_id(lowest_scoring_team_id).team_name
+
+  end
+
+  def highest_scoring_visitor_team
+    highest_scoring_team_by_hoa('away')
+  end
+
+  def highest_scoring_home_team
+    highest_scoring_team_by_hoa('home')
+  end
+
+  def lowest_scoring_visitor_team
+    lowest_scoring_team_by_hoa('away')
+  end
+
+  def lowest_scoring_home_team
+    lowest_scoring_team_by_hoa('home')
   end
 end
