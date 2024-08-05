@@ -10,6 +10,7 @@ class StatTracker
   def self.from_csv(locations)
     teams = read_and_process_csv(locations[:teams], Team)
     game_teams = read_and_process_csv(locations[:game_teams], GameTeam)
+    games = read_and_process_csv(locations[:games], Game)
 
     new(games, teams, game_teams)
   end
@@ -97,7 +98,7 @@ class StatTracker
     average_goals_rounded = average_goals.round(2)
     average_goals_rounded
   end
-  
+
   def average_goals_by_season
     games_by_season = @games.group_by { |game| game.season }
     
