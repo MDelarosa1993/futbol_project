@@ -64,9 +64,79 @@ RSpec.describe StatTracker do
     expect(@stat_tracker.average_goals_by_season).to eq expected
   end
 
-  describe 'highest_scoring_teams' do
-    it 'returns name of highest scoring visitor team' do 
-      expect(@stat_tracker.highest_scoring_visitor).to eq('team name')
+  it "#most_tackles" do
+    expect(@stat_tracker.most_tackles("20132014")).to eq "FC Cincinnati"
+    expect(@stat_tracker.most_tackles("20142015")).to eq "Seattle Sounders FC"
+  end
+
+  it "#fewest_tackles" do
+    expect(@stat_tracker.fewest_tackles("20132014")).to eq "Atlanta United"
+    expect(@stat_tracker.fewest_tackles("20142015")).to eq "Orlando City SC"
+  end
+
+
+  describe '#most_accurate_team' do
+    it 'is the team name with the best ratio of shots to goals for the season' do
+      expect(@stat_tracker.find_game_teams_by_season("2012")).to be_a(Array)
+      expect(@stat_tracker.most_accurate_team("20172018")).to eq("Portland Timbers")
+      expect(@stat_tracker.most_accurate_team("20142015")).to eq("Toronto FC")
+      expect(@stat_tracker.most_accurate_team("20132014")).to eq("Real Salt Lake")
     end
   end
-end 
+
+  describe '#least_accurate_team' do
+    it 'is the team name with the worst ratio of shots to goals by season' do
+      expect(@stat_tracker.least_accurate_team("20142015")).to eq("Columbus Crew SC")
+      expect(@stat_tracker.least_accurate_team("20132014")).to eq("New York City FC")
+    end
+  end
+
+  it "#count_of_teams" do
+    expect(@stat_tracker.count_of_teams).to eq 32
+  end
+
+  it "#best_offense" do
+    expect(@stat_tracker.best_offense).to eq "Reign FC"
+  end
+
+  it "#worst_offense" do
+    expect(@stat_tracker.worst_offense).to eq "Utah Royals FC"
+  end
+
+  it "#count_of_games_by_season" do
+    expected = {
+      "20122013"=>806,
+      "20162017"=>1317,
+      "20142015"=>1319,
+      "20152016"=>1321,
+      "20132014"=>1323,
+      "20172018"=>1355
+    }
+  expect(@stat_tracker.count_of_games_by_season).to eq expected
+  end
+
+  it 'returns games by season' do 
+    games_by_season = @stat_tracker.filter_games_by_season("20132014")
+    expect(@stat_tracker.filter_games_by_season(("20132014"))).to eq(games_by_season)
+  end
+
+  it 'returns games by season' do 
+    game_id_by_season = @stat_tracker.get_game_ids_by_season("20132014")
+    expect(@stat_tracker.get_game_ids_by_season(("20132014"))).to eq(game_id_by_season)
+  end
+
+  it 'returns gameteams by game id' do 
+    game_team_id = @stat_tracker.filter_game_teams_by_game_ids("6")
+    expect(@stat_tracker.filter_game_teams_by_game_ids(("6"))).to eq(game_team_id)
+  end
+
+  it 'returns team by id' do 
+    team_id = @stat_tracker.find_team_by_id('1')
+    expect(@stat_tracker.find_team_by_id('1')).to eq(team_id)
+  end
+
+  it 'retruns a hash with team names' do 
+    hash = @stat_tracker.construct_team_names_hash
+    expect(@stat_tracker.construct_team_names_hash).to eq(hash)
+  end
+end
