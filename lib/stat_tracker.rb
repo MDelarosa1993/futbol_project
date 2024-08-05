@@ -8,28 +8,17 @@ class StatTracker
   attr_reader :games, :teams, :game_teams
 
   def self.from_csv(locations)
-    # The from_csv method initializes StatTracker object
-    # with the arrays of Game, Team, and GameTeam objects created from the CSV files. 
-    # The read_and_process_csv method abstracts the common logic of reading and creating objects from a CSV file.
-    # Calls read_and_process_csv for each type of CSV file 
-    # (games, teams, game_teams), passing the appropriate class (Game, Team, GameTeam) to construct the objects.
-    games = read_and_process_csv(locations[:games], Game)
     teams = read_and_process_csv(locations[:teams], Team)
     game_teams = read_and_process_csv(locations[:game_teams], GameTeam)
 
     new(games, teams, game_teams)
   end
-    # Reads the CSV file at file_path(games.csv, teams.csv, game_teams)
-    # Converts each row to a hash (row.to_h), 
-    # initializes an object of class klass with this hash, 
-    # and returns an array of these objects.
+
   def self.read_and_process_csv(file_path, file_class )
     CSV.foreach(file_path, headers: true, header_converters: :symbol).map do |row|
       file_class.new(row.to_h)
     end
   end
-  # self is being used here to seperate the class methods from an instance method.
-  #
 
   def initialize(games, teams, game_teams)
     @games = games
@@ -46,7 +35,7 @@ class StatTracker
   end
 
   def total_score 
-    @games.map do |game| #rows
+    @games.map do |game|
       home_goals = game.home_goals
       away_goals = game.away_goals
       home_goals + away_goals
@@ -109,7 +98,6 @@ class StatTracker
     average_goals_rounded
   end
   
-
   def average_goals_by_season
     games_by_season = @games.group_by { |game| game.season }
     
@@ -119,8 +107,6 @@ class StatTracker
       average = (total_goals.to_f / total_games)
       hash[season] = average.round(2)
     end
-    # averages = a hash that contains the avg goals
-    # per game for each seaosn
     averages
   end
 
@@ -155,8 +141,7 @@ class StatTracker
   def find_team_by_id(team_id)
     @teams.find { |team| team.team_id == team_id }
   end
-  
- 
+
   def construct_team_names_hash
     team_names_hash = {}
     @teams.each do |team|
@@ -166,8 +151,7 @@ class StatTracker
     end
       team_names_hash  
   end
-  
-  
+
   def most_tackles(season)
     game_ids = get_game_ids_by_season(season)
     game_teams_in_season = filter_game_teams_by_game_ids(game_ids)
@@ -234,10 +218,6 @@ class StatTracker
     team_ratios_list
   end
 
-  # Method to calculate average goals per team
-  # This helper method computes the average number of goals for each team by iterating 
-  # through @game_teams, grouping goals by team ID, and then calculating the average. 
-  # Both best_offense and worst_offense use this method to get the average goals data.
   def calculate_average_goals
     game_team_goals = Hash.new { |hash, key| hash[key] = [] }
     @game_teams.each do |game_team|
@@ -247,24 +227,18 @@ class StatTracker
       goals.sum.to_f / goals.size
     end
   end
-  
-  # Method to find a team's name by team ID
-#  This method searches through the @teams array to find the matching team and returns the team name. 
+   
   def find_team_name_by_id(team_id)
     team = @teams.find { |t| t.team_id == team_id.to_s }
     team.team_name if team
   end
   
-  # They use calculate_average_goals to get the average goals per team and find_team_name_by_id to retrieve the 
-  # team name based on the ID.
-  # Best offense method
   def best_offense
     average_goals = calculate_average_goals
     best_team_id = average_goals.max_by { |_, avg_goals| avg_goals }.first
     find_team_name_by_id(best_team_id)
   end
   
-  # Worst offense method
   def worst_offense
     average_goals = calculate_average_goals
     worst_team_id = average_goals.min_by { |_, avg_goals| avg_goals }.first
@@ -273,28 +247,25 @@ class StatTracker
 
   def average_scores_by_hoa(hoa)
     scores = Hash.new { |hash, key| hash[key] = { goals: 0, games: 0 } }
-
     @game_teams.each do |game_team|
-    if game_team.hoa == hoa
-      scores[game_team.team_id][:goals] += game_team.goals
-      scores[game_team.team_id][:games] += 1
+      if game_team.hoa == hoa
+        scores[game_team.team_id][:goals] += game_team.goals
+        scores[game_team.team_id][:games] += 1
+      end
     end
-  end
-
     scores.transform_values { |data| data[:games] > 0 ? data[:goals].to_f / data[:games] : 0.0 }
   end
 
   def highest_scoring_team_by_hoa(hoa)
     average_scores = average_scores_by_hoa(hoa)
     highest_scoring_team_id = average_scores.max_by { |_, average_goals| average_goals }&.first
-    find_team_by_id(highest_scoring_team_id).team_name
-     
+    find_team_by_id(highest_scoring_team_id).team_name  
   end
+
   def lowest_scoring_team_by_hoa(hoa)
     average_scores = average_scores_by_hoa(hoa)
     lowest_scoring_team_id = average_scores.min_by { |_, average_goals| average_goals }&.first
     find_team_by_id(lowest_scoring_team_id).team_name
-
   end
 
   def highest_scoring_visitor
